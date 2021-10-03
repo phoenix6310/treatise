@@ -1,5 +1,5 @@
 {
-  "name": "treatise_web",
+  "name": "treatise",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,6 +8,12 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "dayjs": "^1.10.7",
+    "element-ui": "^2.15.6",
+    "js-cookie": "^3.0.1",
+    "normalize.css": "^8.0.1",
+    "nprogress": "^0.2.0",
+    "vod-js-sdk-v6": "^1.4.12",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"
@@ -17,6 +23,7 @@
     "@vue/cli-service": "^4.5.0",
     "node-sass": "^4.12.0",
     "sass-loader": "^8.0.2",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "vue-template-compiler": "^2.6.11"
   }
 }

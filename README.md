@@ -1,4 +1,4 @@
-# treatise_web
+# treatise
 
 ## Project setup
 ```

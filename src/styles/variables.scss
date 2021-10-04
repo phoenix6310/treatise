@@ -1,0 +1,27 @@
+//sidebar
+$menuText:#333333;
+$menuActiveText:#6164FF;
+$subMenuActiveText:#6164FF; //https://github.com/ElemeFE/element/issues/12951
+
+$menuBg:#fff;  // 菜单的底色
+$menuHover:#F6F6F6;
+
+$subMenuBg:#F6F6F6;
+$subMenuHover:#F6F6F6;
+
+$sideBarWidth: 200px;
+
+$navbarColor:#6164FF;
+
+// the :export directive is the magic sauce for webpack
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+  navbarColor: $navbarColor;
+}

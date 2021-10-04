@@ -1,4 +1,4 @@
-# treatise
+# treatise_manager
 
 ## Project setup
 ```

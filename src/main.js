@@ -3,19 +3,17 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import message from '@/utils/resetMessage.js'
+Vue.config.productionTip = false
 import 'normalize.css/normalize.css'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css' // progress bar style
-
+import '@/styles/index.scss'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
-import '@/style/index.scss'
-Vue.config.productionTip = false
+import './permission' // permission control
 
 Vue.use(ElementUI);
-Vue.prototype.$message = message;
 new Vue({
   router,
   store,

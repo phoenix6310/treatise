@@ -35,12 +35,12 @@ export const asyncRouterMap = [
     redirect: '/competition',
     name: 'index',
     hidden: true
-  },
-  {
+  }, {
     path: '/competition',
     component: Layout,
     name: 'competition',
     redirect: '/competition/create',
+    hidden: true,
     meta: {
       title: '竞赛',
       roles: [10001]
@@ -48,49 +48,28 @@ export const asyncRouterMap = [
     children: [{
       path: '/competition/create',
       component: () => import('@/views/competition/create'),
-      name: 'createCompetion',
+      name: 'competition_create',
       meta: {
         title: '创建竞赛',
       }
     }, {
       path: '/competition/manage',
       component: () => import('@/views/competition/manage'),
-      name: 'createCompetion',
+      name: 'competition_manage',
       meta: {
         title: '竞赛管理',
       }
     }]
-  },
-  {
-    path: '/account',
+  }, {
+    path: '/upload',
     component: Layout,
-    name: 'account',
-    redirect: '/account/participant',
-    meta: {
-      title: '人员管理',
-      roles: [10001]
-    },
+    name: 'upload',
+    redirect: '/upload/video',
+    hidden: true,
     children: [{
-      path: '/account/participant',
-      component: () => import('@/views/account/participant'),
-      name: 'participant',
-      meta: {
-        title: '选手信息',
-      }
-    }, {
-      path: '/account/reviewer',
-      component: () => import('@/views/account/reviewer'),
-      name: 'reviewer',
-      meta: {
-        title: '评审信息',
-      }
-    }, {
-      path: '/account/manager',
-      component: () => import('@/views/account/manager'),
-      name: 'manager',
-      meta: {
-        title: '管理员信息',
-      }
+      path: '/upload/video',
+      component: () => import('@/views/upload/video'),
+      name: 'upload_video',
     }]
   }, {
     path: '/404',

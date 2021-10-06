@@ -15,7 +15,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    // config.headers['Host'] = 'f3176v6414.zicp.vip'
+    config.headers['Authorization'] = 'eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ4eHN5QGZvdW5kZXIuY29tIiwidXNlcklkIjoiMjhmOTYxNWIzOGJjMTFlOTg4NDM4Y2VjNGI5YjMyMWYiLCJuYW1lIjoi6LaF57qn566h55CG5ZGYIiwic3RhdHVzIjoiMCIsIm9yZ0lkIjoiMCIsImV4cCI6MTYzMzQ0ODU4M30.F3Q8eJOmU3U1yoClL8SCM2B4DFS9iPOuqMYXbD8BYR4PYBb3AwraHXUNIqb8_zYcNheZQ0S-MJ_8XwgWdV7F80LU5vIpnk2mrOpd0knMB0QNt1WzdMw63-3cJa5Jg0gkpTdLvYZ9a54mxK2LfrhsnrXx1iHuwzWBfGjUkyIFe4g'
     
     if (store.getters.token) {
       // let each request carry token

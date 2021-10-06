@@ -35,6 +35,13 @@ module.exports = {
         // headers: {
         //     Host: 'f3176v6414.zicp.vip'
         // }
+      },
+      '/video_signnature': {
+        target: 'http://xxsy.apabi.cn',
+        pathRewrite: {
+          '^/video_signnature': '',
+          changeOrigin: true
+        },
       }
     }
   },

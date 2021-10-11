@@ -10,7 +10,7 @@
       />
     </form>
     <button @click="vExampleAdd">直接上传</button>
-
+    <button @click="download">下载</button>
     <div class="row" id="resultBox">
       <!-- 上传信息组件	 -->
       <div class="uploaderMsgBox" v-for="uploaderInfo in uploaderInfos">
@@ -88,6 +88,30 @@ export default {
     vExampleAdd: function () {
       this.$refs.vExampleFile.click();
     },
+    download() {
+      axios({
+        method: "get",
+        url: `http://1400170034.vod2.myqcloud.com/faeed456vodcq1400170034/cb30b2e53701925925544045906/KpqAA95eaPkA.mp4?t=615feb8f&rlimit=2&us=2435931290295340269&sign=1c5cc64d4428e7dff452bca760951d77`,
+        // 必须显式指明响应类型是一个Blob对象，这样生成二进制的数据，才能通过window.URL.createObjectURL进行创建成功
+        responseType: "blob",
+      }).then((res) => {
+        if (!res) {
+          return;
+        }
+        // 将lob对象转换为域名结合式的url
+        let blobUrl = window.URL.createObjectURL(res.data);
+        let link = document.createElement("a");
+        document.body.appendChild(link);
+        link.style.display = "none";
+        link.href = blobUrl;
+        // 设置a标签的下载属性，设置文件名及格式，后缀名最好让后端在数据格式中返回
+        link.download = "下载文件.csv";
+        // 自触发click事件
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(blobUrl);
+      });
+    },
     vExampleUpload: function () {
       var self = this;
       var mediaFile = this.$refs.vExampleFile.files[0];
@@ -95,7 +119,7 @@ export default {
       var uploader = this.tcVod.upload({
         mediaFile: mediaFile,
       });
-      console.log(uploader, 'uploaderuploader')
+      console.log(uploader, "uploaderuploader");
       uploader.on("media_progress", function (info) {
         uploaderInfo.progress = info.percent;
       });
@@ -103,7 +127,7 @@ export default {
         uploaderInfo.isVideoUploadSuccess = true;
       });
 
-      let {videoFile} = uploader
+      let { videoFile } = uploader;
       console.log(uploader, videoFile, "uploader");
 
       var uploaderInfo = {

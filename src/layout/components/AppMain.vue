@@ -32,6 +32,6 @@ export default {
   position: relative;
   overflow: hidden;
   background-color: #fff;
-  margin: 30px;
+  /* margin: 30px; */
 }
 </style>

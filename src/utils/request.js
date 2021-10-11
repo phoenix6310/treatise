@@ -15,7 +15,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    config.headers['Authorization'] = 'eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ4eHN5QGZvdW5kZXIuY29tIiwidXNlcklkIjoiMjhmOTYxNWIzOGJjMTFlOTg4NDM4Y2VjNGI5YjMyMWYiLCJuYW1lIjoi6LaF57qn566h55CG5ZGYIiwic3RhdHVzIjoiMCIsIm9yZ0lkIjoiMCIsImV4cCI6MTYzMzQ0ODU4M30.F3Q8eJOmU3U1yoClL8SCM2B4DFS9iPOuqMYXbD8BYR4PYBb3AwraHXUNIqb8_zYcNheZQ0S-MJ_8XwgWdV7F80LU5vIpnk2mrOpd0knMB0QNt1WzdMw63-3cJa5Jg0gkpTdLvYZ9a54mxK2LfrhsnrXx1iHuwzWBfGjUkyIFe4g'
+    config.headers['Authorization'] = 'eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ4eHN5QGZvdW5kZXIuY29tIiwidXNlcklkIjoiMjhmOTYxNWIzOGJjMTFlOTg4NDM4Y2VjNGI5YjMyMWYiLCJuYW1lIjoi6LaF57qn566h55CG5ZGYIiwic3RhdHVzIjoiMCIsIm9yZ0lkIjoiMCIsImV4cCI6MTYzNDAwMDY3OX0.FpmWEjwX6zSgtpud_SrLzsHmjWbljv2BDkIdu2ZckZR0XHdVdX298jYV2rkuk85pS0uIozGu4e7i1IX6aTdeNlf4U16xU6XrUdABxYbe1QvI_iiUIk0exkdvdg-b9cH1YHdQwqgIiqJy0waqUmW7zNy0eCQJaEElP_gnK5eQL1w'
     
     if (store.getters.token) {
       // let each request carry token

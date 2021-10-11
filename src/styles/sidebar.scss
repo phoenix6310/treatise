@@ -4,14 +4,16 @@
   .main-container {
     min-height: 100%;
     transition: margin-left .28s;
-    margin-left: $sideBarWidth;
+    // margin-left: $sideBarWidth;
+    margin-left: 0;
     position: relative;
   }
 
   // 侧边栏 Sidebar container
   .sidebar-container {
     transition: width 0.28s;
-    width: $sideBarWidth !important;
+    // width: $sideBarWidth !important;
+    width: 0!important;
     height: 930px !important;
     position: relative;
     float: left;

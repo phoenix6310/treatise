@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { sendEmailCode } from "@/api/user";
 export default {
   data() {
     var validateemail = (rule, value, callback) => {
@@ -68,16 +69,29 @@ export default {
   methods: {
     onSubmit(formName) {
       console.log(this.$refs[formName]);
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
           console.log("submit!");
+          const formData = new FormData();
+          formData.append("email", this.loginForm.email.trim());
+          formData.append("vcode", this.loginForm.code.trim());
+          this.$store
+            .dispatch("Login", formData)
+            .then((res) => {
+              // 登录成功
+              console.log(res, 'Login')
+              this.$router.push("/competition");
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         } else {
           console.log("error submit!!");
           return false;
         }
       });
     },
-    sendCode() {
+    async sendCode() {
       if (!this.loginForm.email) {
         this.$message({
           message: "请输入邮箱",
@@ -85,7 +99,25 @@ export default {
         });
       } else if (this.rightEmail) {
         // 发送验证码
-        console.log("发送验证码");
+        console.log("发送验证码", this.loginForm.email);
+        let res = await sendEmailCode({
+          email: this.loginForm.email.trim(),
+          type: 1,
+        });
+        if (res.code === 1) {
+          this.$message({
+            type: "success",
+            message: `已发送验证码至邮箱：${this.loginForm.email.trim()}`,
+            duration: 3000,
+          });
+        } else {
+          this.$message({
+            type: "error",
+            message: res.message,
+            duration: 3000,
+          });
+          this.isUpload = false;
+        }
       }
     },
   },
@@ -112,9 +144,7 @@ export default {
 
   .form_wrap {
     margin-top: -20%;
-    width: 30%;
-    max-width: 500px;
-    min-width: 260px;
+    width: 500px;
     border: 1px solid #dcdfe6;
     padding: 20px 40px 20px 20px;
     border-radius: 8px;

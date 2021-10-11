@@ -39,26 +39,31 @@ export const asyncRouterMap = [
     path: '/competition',
     component: Layout,
     name: 'competition',
-    redirect: '/competition/create',
+    // redirect: '/competition/create',
     hidden: true,
     meta: {
-      title: '竞赛',
-      roles: [10001]
+      title: '竞赛'
     },
     children: [{
-      path: '/competition/create',
-      component: () => import('@/views/competition/create'),
-      name: 'competition_create',
-      meta: {
-        title: '创建竞赛',
-      }
-    }, {
-      path: '/competition/manage',
-      component: () => import('@/views/competition/manage'),
-      name: 'competition_manage',
-      meta: {
-        title: '竞赛管理',
-      }
+      path: '/competition/student',
+      component: () => import('@/views/competition/student'),
+      name: 'competition_student',
+      roles: [1]
+    },{
+      path: '/competition/teacher',
+      component: () => import('@/views/competition/teacher'),
+      name: 'competition_teacher',
+      roles: [2]
+    },{
+      path: '/competition/reviewer',
+      component: () => import('@/views/competition/reviewer'),
+      name: 'competition_teacher',
+      roles: [1001]
+    },{
+      path: '/competition/studentScore/:userId',
+      component: () => import('@/views/competition/studentScore'),
+      name: 'competition_teacher',
+      roles: [1001]
     }]
   }, {
     path: '/upload',

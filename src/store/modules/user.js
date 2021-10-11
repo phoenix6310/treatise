@@ -1,5 +1,12 @@
-import { login, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import {
+    login,
+    getInfo
+} from '@/api/user'
+import {
+    getToken,
+    setToken,
+    removeToken
+} from '@/utils/auth'
 
 const user = {
     state: {
@@ -19,7 +26,9 @@ const user = {
         }
     },
     actions: {
-        Login({ commit }, formData) {
+        Login({
+            commit
+        }, formData) {
             return new Promise((resolve, reject) => {
                 login(formData).then(response => {
                     const token = response.data['diss-token']
@@ -32,13 +41,34 @@ const user = {
                 })
             })
         },
-        GetInfo({ commit, state }) {
+        GetInfo({
+            commit,
+            state
+        }) {
             return new Promise(async (resolve, reject) => {
-                let { data: userData } = await getInfo()
-                console.log(userData, 'GetInfo')
-                commit('SET_ROLES', [userData.userType])
-                commit('SET_USERDATA', userData)
-                resolve(userData)
+                try {
+                    let {
+                        data: userData
+                    } = await getInfo()
+                    console.log(userData, 'GetInfo')
+                    const userType = userData.userType
+                    commit('SET_ROLES', [userType])
+                    commit('SET_USERDATA', userData)
+                    resolve(userData)
+                } catch (err) {
+                    reject(err)
+                }
+
+            })
+        },
+        LogOut({
+            commit
+        }) {
+            return new Promise((resolve, reject) => {
+                commit('SET_TOKEN', '')
+                commit('SET_ROLES', [])
+                removeToken()
+                resolve()
             })
         }
     }

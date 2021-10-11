@@ -24,12 +24,15 @@ module.exports = {
     open: true,
     port: 9526,
     host: '192.168.0.105',
+    host: '172.18.84.35',
     proxy: {
-      'api': {
+      'treatise': {
+        // target: 'http://172.18.84.81',
         // target: 'http://172.18.84.42:7006',
         target: 'http://f3176v6414.zicp.vip',
+        // target: 'http://150.242.171.61',
         pathRewrite: {
-          '^/api': '',
+          '^/treatise': '',
           changeOrigin: true
         },
         // headers: {

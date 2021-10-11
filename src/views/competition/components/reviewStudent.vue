@@ -1,5 +1,6 @@
 <template>
   <div class="review_student_wrap w1200">
+    <div class="table_title w1200">评分列表</div>
     <el-table
       :data="tableData"
       style="width: 100%"
@@ -26,7 +27,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="score" label="最终分数"> </el-table-column>
+      <el-table-column prop="score" label="总评分"> </el-table-column>
       <el-table-column prop="totalScore" label="已评分数"> </el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
@@ -98,6 +99,12 @@ export default {
 </script>
 <style lang="scss">
 .review_student_wrap {
+  .table_title {
+    line-height: 1.7;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+  }
   .pre_score_wrap {
     display: flex;
     .pre_score_input {

@@ -1,14 +1,21 @@
 import axios from 'axios'
-import { MessageBox, Message } from 'element-ui'
+import {
+  MessageBox,
+  Message
+} from 'element-ui'
 import store from '@/store'
-import { TokenKey, getToken } from '@/utils/auth'
+import {
+  TokenKey,
+  getToken,
+  removeToken
+} from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
   // baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   baseURL: '/',
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000*10 // request timeout
+  timeout: 5000 * 10 // request timeout
 })
 
 // request interceptor
@@ -16,7 +23,7 @@ service.interceptors.request.use(
   config => {
     // do something before request is sent
     config.headers['Authorization'] = 'eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ4eHN5QGZvdW5kZXIuY29tIiwidXNlcklkIjoiMjhmOTYxNWIzOGJjMTFlOTg4NDM4Y2VjNGI5YjMyMWYiLCJuYW1lIjoi6LaF57qn566h55CG5ZGYIiwic3RhdHVzIjoiMCIsIm9yZ0lkIjoiMCIsImV4cCI6MTYzNDAwMDY3OX0.FpmWEjwX6zSgtpud_SrLzsHmjWbljv2BDkIdu2ZckZR0XHdVdX298jYV2rkuk85pS0uIozGu4e7i1IX6aTdeNlf4U16xU6XrUdABxYbe1QvI_iiUIk0exkdvdg-b9cH1YHdQwqgIiqJy0waqUmW7zNy0eCQJaEElP_gnK5eQL1w'
-    
+
     if (store.getters.token) {
       // let each request carry token
       // ['X-Token'] is a custom headers key
@@ -37,7 +44,7 @@ service.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
    * Please return  response => response
-  */
+   */
 
   /**
    * Determine the request status by custom code
@@ -48,7 +55,17 @@ service.interceptors.response.use(
     const res = response.data
 
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 1) {
+    if (res.code === 1) {
+      return res
+    } else if (res.code === 5) {
+      Message({
+        message: res.message.err,
+        type: 'error',
+        duration: 5 * 1000
+      })
+      removeToken()
+    } else {
+
       Message({
         message: res.message.err,
         type: 'error',
@@ -69,8 +86,6 @@ service.interceptors.response.use(
       //   })
       // }
       return Promise.reject(new Error(res.message || 'Error'))
-    } else {
-      return res
     }
   },
   error => {

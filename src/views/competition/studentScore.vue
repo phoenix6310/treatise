@@ -13,7 +13,6 @@
         ref="ruleForm"
         label-width="140px"
       >
-        <!-- <el-form-item> -->
         <ul class="rule_detail_container">
           <li class="rule_item">
             <div class="rule_item_0">指标</div>
@@ -64,7 +63,6 @@
             </ul>
           </li>
         </ul>
-        <!-- </el-form-item> -->
         <el-form-item>
           <el-button
             type="primary"

@@ -30,3 +30,11 @@ export function updatePreScore(data) {
       data
   })
 }
+// 评审人员保存评审进度
+export function updateReviewVideoProgress(data) {
+  return request({
+      url: '/treatise/courseuser/dissertation/font/reviewer/updateProgress',
+      method: 'post',
+      data
+  })
+}

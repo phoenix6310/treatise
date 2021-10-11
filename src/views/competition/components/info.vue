@@ -1,6 +1,9 @@
 <template>
   <div class="user_info_wrap">
     <el-card class="box-card" shadow="hover">
+      <div class="info_title">
+        账号信息：
+      </div>
       <ul class="info_container">
         <li>姓名： {{ userData.name }}</li>
         <li v-if="userData.userType === 1">学号： {{ userData.userNo }}</li>

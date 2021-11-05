@@ -32,6 +32,7 @@ module.exports = {
         // target: 'http://172.18.84.42:7006',
         // target: 'http://f3176v6414.zicp.vip',
         // target: 'http://150.242.171.61',
+        // target: 'http://scc.apabi.cn/',
         pathRewrite: {
           '^/treatise': '',
           changeOrigin: true
@@ -41,7 +42,7 @@ module.exports = {
         // }
       },
       '/video_signnature': {
-        target: 'http://xxsy.apabi.cn',
+        target: 'http://scc.apabi.cn',
         pathRewrite: {
           '^/video_signnature': '',
           changeOrigin: true
@@ -63,4 +64,5 @@ module.exports = {
       ...prodPlugins,
     ],
   },
+  outputDir: 'E:\\pengjie20190321\\project\\OnlineCourseWeb\\dist\\db_study'
 }

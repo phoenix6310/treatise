@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function login(data) {
     return request({
-        url: '/treatise/courseuser/dissertation/font/login/email',
+        url: '/treatise/courseuser/dissertation/font/login',
         method: 'post',
         data
     })

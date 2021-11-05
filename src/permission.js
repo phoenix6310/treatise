@@ -22,6 +22,7 @@ router.beforeEach(async (to, from, next) => {
     NProgress.start()
     const hasToken = getToken()
     if (hasToken) {
+        console.log(to.path, 'to.path')
         if (to.path === '/login') {
             next({
                 path: '/'
@@ -29,13 +30,14 @@ router.beforeEach(async (to, from, next) => {
             NProgress.done()
         } else {
             const hasRoles = store.getters.roles && store.getters.roles.length > 0
-            console.log(store.getters.roles)
+            // console.log(store.getters.roles)
 
             if (hasRoles) {
-                console.log(to.path)
-
-                next()
-                NProgress.done()
+                console.log(hasRoles, to.path)
+                setTimeout(() => {
+                    next()
+                    NProgress.done()
+                }, 0);
             } else {
                 try {
                     const {
@@ -44,8 +46,11 @@ router.beforeEach(async (to, from, next) => {
                     store.dispatch('GenerateRoutes', {
                         roles: [userType]
                     }).then(() => { // 根据roles权限生成可访问的路由表
-
-                        router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
+                        console.log('store.getters.addRouters', store.getters.addRouters)
+                        // router.addRoute(store.getters.addRouters) // 动态添加可访问路由表
+                        store.getters.addRouters.forEach(route => {
+                            router.addRoute(route)
+                        });
                         if (to.path === '/competition') {
                             next({
                                 path: userTypePath[userType],

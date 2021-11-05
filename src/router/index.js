@@ -30,16 +30,16 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
+  // {
+  //   path: '/',
+  //   redirect: '/competition',
+  //   name: 'index',
+  //   hidden: true
+  // }, 
   {
-    path: '/',
-    redirect: '/competition',
-    name: 'index',
-    hidden: true
-  }, {
     path: '/competition',
     component: Layout,
     name: 'competition',
-    // redirect: '/competition/create',
     hidden: true,
     meta: {
       title: '竞赛'
@@ -57,12 +57,12 @@ export const asyncRouterMap = [
     },{
       path: '/competition/reviewer',
       component: () => import('@/views/competition/reviewer'),
-      name: 'competition_teacher',
+      name: 'competition_reviewer',
       roles: [1001]
     },{
       path: '/competition/studentScore/:userId',
       component: () => import('@/views/competition/studentScore'),
-      name: 'competition_teacher',
+      name: 'competition_reviewer_student',
       roles: [1001]
     }]
   }, {

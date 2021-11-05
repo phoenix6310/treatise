@@ -22,7 +22,7 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-    config.headers['Authorization'] = 'eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ4eHN5QGZvdW5kZXIuY29tIiwidXNlcklkIjoiMjhmOTYxNWIzOGJjMTFlOTg4NDM4Y2VjNGI5YjMyMWYiLCJuYW1lIjoi6LaF57qn566h55CG5ZGYIiwic3RhdHVzIjoiMCIsIm9yZ0lkIjoiMCIsImV4cCI6MTYzNDAwMDY3OX0.FpmWEjwX6zSgtpud_SrLzsHmjWbljv2BDkIdu2ZckZR0XHdVdX298jYV2rkuk85pS0uIozGu4e7i1IX6aTdeNlf4U16xU6XrUdABxYbe1QvI_iiUIk0exkdvdg-b9cH1YHdQwqgIiqJy0waqUmW7zNy0eCQJaEElP_gnK5eQL1w'
+    // config.headers['Authorization'] = 'eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ4eHN5QGZvdW5kZXIuY29tIiwidXNlcklkIjoiMjhmOTYxNWIzOGJjMTFlOTg4NDM4Y2VjNGI5YjMyMWYiLCJuYW1lIjoi6LaF57qn566h55CG5ZGYIiwic3RhdHVzIjoiMCIsIm9yZ0lkIjoiMCIsImV4cCI6MTYzNDk4NDA4M30.GjEqYJ5mEuUPixNF_UFfnz5wJpnym4o56xV-CEUsMXKa1QgP_uptR4bT3UfqWTbnIuvbqmZ7CzG3kuM4mUVgFdx1TwMrxjVPUHElLDoH5Ac5DzRkd0VwxS9XXbl2iqYLSLLgfeola9-jUG4fmkBirr44JkM7wDGzCuqJWULWH6Y'
 
     if (store.getters.token) {
       // let each request carry token
@@ -65,9 +65,8 @@ service.interceptors.response.use(
       })
       removeToken()
     } else {
-
       Message({
-        message: res.message.err,
+        message: res.message.err+11,
         type: 'error',
         duration: 5 * 1000
       })
@@ -95,6 +94,7 @@ service.interceptors.response.use(
       type: 'error',
       duration: 5 * 1000
     })
+    console.log(error.status)
     return Promise.reject(error)
   }
 )

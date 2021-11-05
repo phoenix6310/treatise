@@ -15,9 +15,9 @@
           :on-remove="handleRemove"
           :file-list="fileList"
           :auto-upload="false"
-          :limit="1"
           :on-exceed="exceed"
           :on-error="onError"
+          :fileChange= 'fileChange'
           :on-success="successHandler"
         >
           <el-button
@@ -95,6 +95,9 @@ export default {
     UserInfo,
   },
   methods: {
+    fileChange(file, fileList){
+      console.log(file, fileList)
+    },
     submitForm(formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {

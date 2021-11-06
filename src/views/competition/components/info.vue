@@ -34,7 +34,7 @@ export default {
         return "暂未上传";
       }
     },
-  },
+  }
 };
 </script>
 <style lang="scss">

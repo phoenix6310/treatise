@@ -63,6 +63,7 @@ export default {
     justify-content: space-between;
     max-width: 1400px;
     margin: 0 auto;
+    padding: 0 60px;
   }
   .head_right {
     line-height: 24px;

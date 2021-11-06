@@ -14,8 +14,8 @@ NProgress.configure({
 
 const whiteList = ['/login', '/auth-redirect']
 const userTypePath = {
-    1: '/competition/student',
-    2: '/competition/teacher',
+    1: '/competition/contestant',
+    2: '/competition/contestant',
     1001: '/competition/reviewer'
 }
 router.beforeEach(async (to, from, next) => {

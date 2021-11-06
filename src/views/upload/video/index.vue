@@ -66,7 +66,6 @@ export default {
   },
   async created() {
     let { data } = await autograph();
-    console.log(data);
     this.tcVod = new TcVod({
       getSignature: () => data,
     });

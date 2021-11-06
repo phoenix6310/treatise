@@ -52,7 +52,6 @@ export default {
     let progressListRes = await getProgress();
     if (progressListRes.code === 1) {
       let { data } = progressListRes;
-      console.log(data);
       data.map((item) => {
         try {
           item.preScore = item.scores[0].preScore;

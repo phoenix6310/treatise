@@ -9,63 +9,48 @@
       </div>
     </div>
 
-    <el-card class="upload_wrap box-card" shadow="hover">
-      <div class="step_wrap">
-        <div class="title">第一步：<span>上传文件</span></div>
-      </div>
-      <el-upload
-        class="upload-demo"
-        ref="upload"
-        action="#"
-        :on-remove="handleRemove"
-        :file-list="fileList"
-        :auto-upload="false"
-        :on-change="fileChange"
-      >
-        <el-button slot="trigger" size="small" type="primary"
-          >上传文件</el-button
+    <div class="info_wrap">
+      <el-card class="upload_wrap" shadow="hover">
+        <div class="card_title">文档上传</div>
+        <el-upload
+          ref="upload"
+          action="#"
+          :on-remove="handleRemove"
+          :file-list="fileList"
+          :auto-upload="false"
+          :on-change="fileChange"
         >
-        <div slot="tip" class="el-upload__tip">
-          文件要求：
-          <ul class="file-tip">
-            <li>视频格式：{{ acceptVedioTypes.join("、") }}</li>
-            <li>文件格式：{{ acceptWordTypes.join("、") }}</li>
-            <li>单文件大小：不大于{{ fileLimit / (1024 * 1024) }}M</li>
-          </ul>
-        </div>
-      </el-upload>
-    </el-card>
-
-    <el-card class="upload_wrap box-card" shadow="hover">
-      <div class="step_wrap">
-        <div class="title">第二步：<span>上传信息</span></div>
-      </div>
-      <el-form
-        :model="videoInfo"
-        :rules="rules"
-        ref="videoInfo"
-        label-width="100px"
-        class="upload_info_wrap"
-      >
-        <el-form-item label="视频标题" prop="fileTitle">
-          <el-input v-model="videoInfo.fileTitle" class="file_name"></el-input>
-        </el-form-item>
-        <el-form-item label="视频介绍" prop="fileInfo">
-          <el-input
-            v-model="videoInfo.fileInfo"
-            size="small"
-            type="textarea"
-            maxlength="100"
-            :autosize="{ minRows: 4, maxRows: 8 }"
-          ></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="success" @click="submitForm('videoInfo')"
-            >上传</el-button
+          <el-button slot="trigger" size="small" type="primary"
+            >选择文件</el-button
           >
-        </el-form-item>
-      </el-form>
-    </el-card>
+          <div slot="tip" class="el-upload__tip">
+            文件要求：
+            <ul class="file-tip">
+              <li>视频格式：{{ acceptVedioTypes.join("、") }}</li>
+              <li>文件格式：{{ acceptWordTypes.join("、") }}</li>
+              <li>单文件大小：不大于{{ fileLimit / (1024 * 1024) }}M</li>
+            </ul>
+          </div>
+        </el-upload>
+        <!-- 提交 -->
+        <el-button
+          size="small"
+          type="primary"
+          class="upload_info_btn"
+          :disabled="disabledUploadBtn"
+          @click="submitForm"
+          >提交</el-button
+        >
+      </el-card>
+      <el-card class="rule_wrap" shadow="hover">
+        <div class="card_title rule_title">竞赛规则</div>
+        <div
+          class="rule_content"
+          v-if="userData.dissData"
+          v-html="userData.dissData.rule"
+        ></div>
+      </el-card>
+    </div>
   </div>
 </template>
 
@@ -80,10 +65,6 @@ export default {
     return {
       fileList: [],
       uploaderInfos: [],
-      videoInfo: {
-        fileInfo: "",
-        fileTitle: "",
-      },
       showNext: false,
       rules: {
         fileTitle: [
@@ -100,61 +81,80 @@ export default {
       acceptWordTypes: ["PDF", "DOCX", "DOC"],
       // 允许上传视频数
       allowVedioNum: 1,
+      init: true,
     };
   },
   async created() {
     let { data } = await autograph();
-    console.log(data);
     this.tcVod = new TcVod({
       getSignature: () => data,
     });
+    if (this.init) {
+      this.init = false;
+      let historyFiles = this.userData.fileData;
+      if (historyFiles.length) {
+        let fileList = [];
+        historyFiles.map((fileInfo) => {
+          fileList.push({
+            filePath: fileInfo.filePath,
+            fileType: fileInfo.fileType,
+            name: fileInfo.fileName,
+            percentage: 100,
+            status: "success",
+            uid: fileInfo.id,
+          });
+        });
+
+        this.fileList = fileList;
+      }
+    }
   },
   computed: {
     ...mapGetters(["userData"]),
+    disabledUploadBtn() {
+      let flag = false;
+      let length = this.fileList.length;
+      if (length) {
+        for (let i = 0; i < length; i++) {
+          if (this.fileList[i].status !== "success") {
+            flag = true;
+            break;
+          }
+        }
+      } else {
+        flag = true;
+      }
+      return flag;
+    },
   },
   methods: {
     dateToSecond(dataTime) {
-      return dayjs(dataTime).format("YYYY-MM-DD HH:mm:ss");
+      return dayjs(+dataTime).format("YYYY-MM-DD HH:mm:ss");
     },
     // 提交文件信息
-    submitForm(formName) {
-      this.$refs[formName].validate(async (valid) => {
-        if (valid) {
-          let infos = [];
-          this.fileList.map((item) => {
-            let info = {
-              filePath: item.filePath,
-              fileName: item.name,
-              fileInfo: "",
-              fileTitle: "",
-              fileType: item.fileType,
-            };
-            if (item.fileType === 2) {
-              // console.log(Object.assign)
-              // Object.assign(info, {
-              //   fileInfo: this.videoInfo.fileInfo,
-              //   fileTitle: this.videoInfo.fileTitle,
-              // });
-              info.fileInfo = this.videoInfo.fileInfo;
-              info.fileTitle = this.videoInfo.fileTitle;
-            }
-            infos.push(info);
-          });
-          let res = await uploadInfos(infos);
+    async submitForm() {
+      let infos = [];
+      this.fileList.map((item) => {
+        let info = {
+          filePath: item.filePath,
+          fileName: item.name,
+          fileInfo: "",
+          fileTitle: "",
+          fileType: item.fileType,
+        };
 
-          if (res && res.code === 1) {
-            this.$message({
-              type: "success",
-              message: "已上传",
-              duration: 3000,
-            });
-            this.$store.dispatch("GetInfo");
-          }
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
+        infos.push(info);
       });
+      let res = await uploadInfos(infos);
+
+      if (res && res.code === 1) {
+        this.$message({
+          type: "success",
+          message: "已上传",
+          duration: 3000,
+        });
+        this.$store.dispatch("GetInfo");
+      }
     },
     // 获取腾讯云签名
     getAntiLeechUrl(videoUrl, callback) {
@@ -306,35 +306,60 @@ export default {
           self.showNext = true;
         });
     },
-    // 文件上传
-    // submitUpload() {
-    //   this.$refs.upload.submit();
-    // },
   },
 };
 </script>
 <style lang="scss">
 .teacher_wrap {
+  .competion_info_wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    .competition_name {
+      font-size: 24px;
+    }
+    .upload_file_deadline {
+      color: #ff2300;
+      font-size: 18px;
+    }
+  }
   .user_info_container {
     margin-top: 20px;
   }
-  .upload_wrap {
-    margin-top: 40px;
-    padding: 16px 0 16px 40px;
-    .title {
-      line-height: 1.6;
-      margin-bottom: 8px;
-    }
-    .upload_info_wrap {
-      margin-top: 10px;
-      .file_name {
-        width: 300px;
+  .info_wrap {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    .upload_wrap {
+      box-sizing: border-box;
+      width: 720px;
+      .title {
+        line-height: 1.6;
+        margin-bottom: 8px;
+      }
+      .upload_info_wrap {
+        margin-top: 10px;
+        .file_name {
+          width: 300px;
+        }
+      }
+      .upload_info_btn {
+        margin-top: 10px;
       }
     }
-  }
-}
+    .rule_wrap {
+      width: 460px;
+      box-sizing: border-box;
 
-.uploaderMsgBox {
-  margin-top: 60px;
+      .rule_content {
+      }
+    }
+    .card_title {
+      font-size: 18px;
+      color: #409eff;
+      margin-bottom: 10px;
+    }
+  }
 }
 </style>

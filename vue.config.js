@@ -25,11 +25,12 @@ module.exports = {
     open: true,
     port: 9526,
     host: '192.168.0.105',
-    host: '172.18.84.35',
+    // host: '172.18.84.35',
     proxy: {
       'treatise': {
         // target: 'http://172.18.84.81:7006',
         // target: 'http://172.18.84.42:7006',
+        // http://172.18.89.141:8888
         target: 'http://4s455471z1.qicp.vip',
         // target: 'http://150.242.171.61',
         // target: 'http://scc.apabi.cn/',

@@ -1,46 +1,79 @@
 <template>
   <div class="review_teacher_wrap w1200">
-    <el-card class="box-card videro_player_wrap" shadow="hover">
-      <div class="video_info_title_wrap">
-        <div class="video_info_title">待评审微课教师信息：</div>
+    <div class="competion_info_wrap">
+      <div class="competition_name">
+        {{ userData.dissName }}
       </div>
-      <ul class="video_info_wrap">
-        <template v-if="currentVideoInfos">
-          <!-- <li>currentVideoInfos： {{ currentVideoInfos }}</li> -->
-          <li>姓名： {{ currentVideoInfos.name }}</li>
-          <li>学校： {{ currentVideoInfos.collegeName }}</li>
-        </template>
-        <template v-if="videoFileData">
-          <!-- <li>videoFileData： {{ videoFileData }}</li> -->
-          <li>视频标题： {{ videoFileData.fileTitle }}</li>
-          <li>视频介绍： {{ videoFileData.fileInfo }}</li>
-        </template>
+      <div class="upload_file_deadline" v-if="userData.dissData">
+        {{ dateToSecond(userData.dissData.uploadTime) }}
+      </div>
+    </div>
 
-        <!-- <li>姓名： {{ videoFileData.name }}</li> -->
-      </ul>
-      <template v-if="currentVideoInfos">
-        <div v-if="videoFileData">
-          <video
-            id="player-container-id"
-            preload="auto"
-            class="play_video"
-            playsinline
-            webkit-playinline
-            x5-playinline
-            v-if="showVideoEl"
-          ></video>
+    <el-card class="box-card videro_player_wrap" shadow="hover">
+      <div class="vedio_info_wrap">
+        <div class="vedio_wrap">
+          <div v-show="videoFileData">
+            <video
+              id="player-container-id"
+              preload="auto"
+              class="play_video"
+              playsinline
+              webkit-playinline
+              x5-playinline
+              v-if="showVideoEl"
+            ></video>
+          </div>
+          <div v-if="currentVideoInfos && !fileId" class="no_video_tip">
+            {{
+              `教师：${this.currentVideoInfos.name} 未上传视频,请为下一位教师评分（点按钮【下一个视频】）`
+            }}
+          </div>
         </div>
-        <div v-else class="no_video_tip">
-          {{ `教师：${this.currentVideoInfos.name} 未上传视频,请为下一位教师评分（点按钮【下一个视频】）` }}
+        <div class="player_info">
+          <div class="card_title">视频详情</div>
+          <ul class="video_info_container">
+            <template v-if="currentVideoInfos">
+              <!-- <li>currentVideoInfos： {{ currentVideoInfos }}</li> -->
+              <li>姓名： {{ currentVideoInfos.name }}</li>
+              <li>学校： {{ currentVideoInfos.collegeName }}</li>
+              <li>
+                文件列表：
+                <ul class="file_list">
+                  <li v-for="file in fileList" :key="file.id">
+                    <!-- 文件 -->
+                    <a
+                      :href="BASE_FILE_PATH + file.filePath"
+                      target="_blank"
+                      v-if="file.fileType === 1"
+                      >{{ file.name }}</a
+                    >
+                    <!-- 视频 -->
+                    <span
+                      class="vedio_name"
+                      v-if="file.fileType === 2"
+                      @click="loadVedio(file)"
+                    >
+                      {{ file.name }}
+                    </span>
+                  </li>
+                </ul>
+              </li>
+            </template>
+          </ul>
         </div>
-      </template>
+      </div>
 
       <div class="video_control_wrap">
+        <div class="progress_text">
+          <span class="progress_title">进度： </span
+          >{{ this.currentIndex + 1 }} / {{ this.dataListLength }}
+        </div>
         <el-progress
           :text-inside="true"
           :stroke-width="26"
           :percentage="percentage"
         ></el-progress>
+
         <div class="next">
           <el-button
             size="small"
@@ -126,6 +159,7 @@
 import { getProgress } from "@/api/user";
 import { uploadScores, updateReviewVideoProgress } from "@/api/upload.js";
 import { mapGetters } from "vuex";
+import dayjs from "dayjs";
 export default {
   data() {
     return {
@@ -134,54 +168,54 @@ export default {
       ocwPlayer: null,
       ruleForm: {
         entrytVoList: [
-          {
-            name: "总览",
-            info: "",
-            children: [
-              {
-                name: "调研报告字数报告在规定字数范围内（5分，图片、表格及参考文献著录不计入字数）",
-                templateScore: "5",
-                score: "",
-                info: "",
-              },
-              {
-                name: "答辩内容严谨连续，见解独到，逻辑清晰，专业度高，并有正确的思想导向",
-                templateScore: 10,
-                score: "",
-                info: "",
-              },
-            ],
-          },
-          {
-            name: "答辩表现",
-            info: "",
-            children: [
-              {
-                name: "语言规范，口齿清晰，表达准确、流畅、自然",
-                templateScore: 2,
-                score: "",
-                info: "",
-              },
-              {
-                name: "精神饱满，表现恰当",
-                templateScore: 4,
-                score: "",
-                info: "",
-              },
-              {
-                name: "上下场致意，答谢",
-                templateScore: 2,
-                score: "",
-                info: "",
-              },
-              {
-                name: "着装不得体，不自然大方",
-                templateScore: -2,
-                score: "",
-                info: "",
-              },
-            ],
-          },
+          // {
+          //   name: "总览",
+          //   info: "",
+          //   children: [
+          //     {
+          //       name: "调研报告字数报告在规定字数范围内（5分，图片、表格及参考文献著录不计入字数）",
+          //       templateScore: "5",
+          //       score: "",
+          //       info: "",
+          //     },
+          //     {
+          //       name: "答辩内容严谨连续，见解独到，逻辑清晰，专业度高，并有正确的思想导向",
+          //       templateScore: 10,
+          //       score: "",
+          //       info: "",
+          //     },
+          //   ],
+          // },
+          // {
+          //   name: "答辩表现",
+          //   info: "",
+          //   children: [
+          //     {
+          //       name: "语言规范，口齿清晰，表达准确、流畅、自然",
+          //       templateScore: 2,
+          //       score: "",
+          //       info: "",
+          //     },
+          //     {
+          //       name: "精神饱满，表现恰当",
+          //       templateScore: 4,
+          //       score: "",
+          //       info: "",
+          //     },
+          //     {
+          //       name: "上下场致意，答谢",
+          //       templateScore: 2,
+          //       score: "",
+          //       info: "",
+          //     },
+          //     {
+          //       name: "着装不得体，不自然大方",
+          //       templateScore: -2,
+          //       score: "",
+          //       info: "",
+          //     },
+          //   ],
+          // },
         ],
       },
       rules: {},
@@ -189,11 +223,14 @@ export default {
       nextVideoBtnDisabled: false,
       showVideoEl: true,
       currentIndex: 0,
-      initIndex: 0,
       appID: "1258658963",
+      fileList: [],
+      BASE_FILE_PATH: "",
     };
   },
-  async created() {
+  async mounted() {
+    console.log(process.env.VUE_APP_FILEPATH);
+    this.BASE_FILE_PATH = process.env.VUE_APP_FILEPATH;
     // this.updateReviewVideoProgress();
     let progressListRes = await getProgress();
     if (progressListRes.code === 1) {
@@ -204,13 +241,32 @@ export default {
       });
       this.dataList = dataList;
       // 初始化进度
-      this.initIndex = this.currentIndex = this.userData.progress;
+      this.currentIndex = this.userData.progress;
+      let fileList = [];
+      let _fileInfo = null;
       if (this.currentVideoInfos) {
         console.log(this.currentVideoInfos);
-        let fileInfo = this.currentVideoInfos.fileData[0];
-        if (fileInfo) {
-          this.fileId = JSON.parse(fileInfo.filePath).fileId;
-        }
+
+        this.currentVideoInfos.fileData.map((fileInfo) => {
+          if (!_fileInfo && fileInfo.fileType === 2) {
+            this.fileId = JSON.parse(fileInfo.filePath).fileId;
+            _fileInfo = fileInfo;
+          }
+
+          fileList.push({
+            filePath: fileInfo.filePath,
+            fileType: fileInfo.fileType,
+            name: fileInfo.fileName,
+            id: fileInfo.id,
+          });
+        });
+      }
+      this.fileList = fileList;
+      if (_fileInfo) {
+        this.$nextTick(() => {
+          this.fileId = JSON.parse(_fileInfo.filePath).fileId;
+          this.startPlay(this.fileId);
+        });
       }
     }
   },
@@ -261,7 +317,9 @@ export default {
   },
   watch: {
     fileId(newFileId) {
-      console.log(newFileId);
+      console.log(newFileId, "newFileId");
+      // newFileId = '8602268011499299991'
+
       if (newFileId) {
         // if (this.ocwPlayer) {
         //   // this.ocwPlayer.dispose();
@@ -269,13 +327,24 @@ export default {
         //   this.showVideoEl = true;
         // }
         this.$nextTick(() => {
-          this.startPlay(newFileId);
           this.updateEntrytVoList();
         });
       }
     },
   },
   methods: {
+    loadVedio(file) {
+      console.log(file, "filefilefilefile");
+      let fileId = JSON.parse(file.filePath).fileId;
+
+      if (fileId !== this.fileId) {
+        this.fileId = JSON.parse(file.filePath).fileId;
+        this.startPlay(this.fileId);
+      }
+    },
+    dateToSecond(dataTime) {
+      return dayjs(+dataTime).format("YYYY-MM-DD HH:mm:ss");
+    },
     updateReviewVideoProgress() {
       let progressFormData = new FormData();
       progressFormData.append("progress", ++this.currentIndex);
@@ -283,15 +352,35 @@ export default {
     },
     nextVideo() {
       this.currentIndex += 1;
-      let fileInfo = this.currentVideoInfos.fileData[0];
-      console.log(this.currentIndex, fileInfo);
+      let fileList = [];
+      let _fileInfo = null;
+      if (this.currentVideoInfos) {
+        console.log(this.currentVideoInfos);
 
-      if (fileInfo) {
-        this.fileId = JSON.parse(fileInfo.filePath).fileId;
+        this.currentVideoInfos.fileData.map((fileInfo) => {
+          if (!_fileInfo && fileInfo.fileType === 2) {
+            _fileInfo = fileInfo;
+          }
+
+          fileList.push({
+            filePath: fileInfo.filePath,
+            fileType: fileInfo.fileType,
+            name: fileInfo.fileName,
+            id: fileInfo.id,
+          });
+        });
+      }
+      this.fileList = fileList;
+      console.log(this.currentIndex, _fileInfo);
+
+      if (_fileInfo) {
+        this.fileId = JSON.parse(_fileInfo.filePath).fileId;
+        this.startPlay(this.fileId);
         if (this.currentIndex == this.dataList.length - 1) {
           this.nextVideoBtnDisabled = true;
         }
       } else {
+        this.fileId = "";
         this.$message({
           type: "error",
           message: `教师：${this.currentVideoInfos.name} 未上传视频`,
@@ -323,7 +412,7 @@ export default {
       });
     },
     startPlay(fileId) {
-      if (this.initIndex === this.currentIndex) {
+      if (!this.ocwPlayer) {
         this.ocwPlayer = TCPlayer("player-container-id", {
           // player-container-id 为播放器容器ID，必须与html中一致
           fileID: fileId, // 请传入需要播放的视频filID 必须
@@ -344,29 +433,8 @@ export default {
           //其他参数请在开发文档中查看    地址：https://cloud.tencent.com/document/product/266/14603
         });
       } else {
-        if (!this.ocwPlayer) {
-          this.ocwPlayer = TCPlayer("player-container-id", {
-            // player-container-id 为播放器容器ID，必须与html中一致
-            fileID: fileId, // 请传入需要播放的视频filID 必须
-            appID: this.appID, // 请传入点播账号的appID 必须
-            // autoplay: true, //是否自动播放
-            //definition: '40',  //指定播放参数为40的清晰度视频
-            plugins: {
-              ContinuePlay: {
-                //开启续播功能
-                //auto: true //是否在视频播放后自动续播
-                text: "上次播放至", //[可选]提示文案
-                //btntext: '恢复播放' // [可选]按钮文案
-              },
-            },
-            controlBar: {
-              currentTimeDisplay: true,
-            },
-            //其他参数请在开发文档中查看    地址：https://cloud.tencent.com/document/product/266/14603
-          });
-        } else {
-          this.ocwPlayer.loadVideoByID({ fileID: fileId, appID: this.appID });
-        }
+        console.log("loadVideoByID", fileId);
+        this.ocwPlayer.loadVideoByID({ fileID: fileId, appID: this.appID });
       }
     },
     submitForm(formName) {
@@ -420,21 +488,76 @@ export default {
 <style lang="scss">
 .review_teacher_wrap {
   padding-bottom: 50px;
+  .competion_info_wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    .competition_name {
+      font-size: 24px;
+    }
+    .upload_file_deadline {
+      color: #ff2300;
+      font-size: 18px;
+    }
+  }
   .videro_player_wrap {
     margin: 20px 0;
+    .video_control_wrap {
+      .progress_text{
+        color: #409eff;
+        margin-bottom: 4px;
+        .progress_title{
+          font-size: 18px;
+        }
+      }
+    }
   }
   .video_info_wrap {
     list-style: none;
   }
-  .no_video_tip{
+  .no_video_tip {
     color: #f56c6c;
     margin-bottom: 20px;
   }
-  .play_video {
-    width: 1160px;
-    height: 674px;
-    margin-bottom: 20px;
+  .vedio_info_wrap {
+    display: flex;
+    justify-content: space-between;
+    .vedio_wrap {
+      width: 772px;
+      height: 595px;
+      margin-bottom: 20px;
+      .play_video {
+        width: 772px;
+        height: 595px;
+      }
+    }
+    .player_info {
+      width: 334px;
+      line-height: 1.7;
+      .video_info_container {
+        list-style: none;
+        .file_list {
+          li {
+            cursor: pointer;
+            &:hover {
+              color: #409eff;
+              span,
+              a {
+                color: #409eff;
+              }
+            }
+
+            a {
+              text-decoration: none;
+              color: #303133;
+            }
+          }
+        }
+      }
+    }
   }
+
   .next {
     margin-top: 20px;
     margin-bottom: 10px;
@@ -473,6 +596,12 @@ export default {
         }
       }
     }
+  }
+
+  .card_title {
+    font-size: 18px;
+    color: #409eff;
+    margin-bottom: 10px;
   }
 }
 </style>

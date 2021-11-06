@@ -45,15 +45,10 @@ export const asyncRouterMap = [
       title: '竞赛'
     },
     children: [{
-      path: '/competition/student',
-      component: () => import('@/views/competition/student'),
-      name: 'competition_student',
-      roles: [1]
-    },{
-      path: '/competition/teacher',
-      component: () => import('@/views/competition/teacher'),
-      name: 'competition_teacher',
-      roles: [2]
+      path: '/competition/contestant',
+      component: () => import('@/views/competition/contestant'),
+      name: 'competition_contestant',
+      roles: [1, 2]
     },{
       path: '/competition/reviewer',
       component: () => import('@/views/competition/reviewer'),

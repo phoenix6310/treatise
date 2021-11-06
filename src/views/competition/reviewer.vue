@@ -1,8 +1,5 @@
 <template>
   <div class="viewer_wrap">
-    <div class="reviewer_info_wrap w1200">
-      <UserInfo :userData="userData" class="user_info_container"></UserInfo>
-    </div>
     <component :is="componentId"></component>
   </div>
 </template>
@@ -17,7 +14,7 @@ export default {
       componentId: "",
     };
   },
-  
+
   components: {
     ReviewStudent,
     ReviewTeacher,
@@ -41,6 +38,5 @@ export default {
   .reviewer_info_wrap {
     margin-top: 20px;
   }
-  
 }
 </style>

@@ -12,7 +12,7 @@
     <el-card class="box-card videro_player_wrap" shadow="hover">
       <div class="vedio_info_wrap">
         <div class="vedio_wrap">
-          <div v-show="videoFileData">
+          <div v-show="fileId">
             <video
               id="player-container-id"
               preload="auto"
@@ -30,7 +30,7 @@
           </div>
         </div>
         <div class="player_info">
-          <div class="card_title">视频详情</div>
+          <div class="card_title">详情</div>
           <ul class="video_info_container">
             <template v-if="currentVideoInfos">
               <!-- <li>currentVideoInfos： {{ currentVideoInfos }}</li> -->
@@ -147,7 +147,8 @@
           <el-button
             type="primary"
             @click="submitForm('ruleForm')"
-            :disabled="isUpload || !videoFileData"
+            :disabled="isUpload || !fileList.length"
+            class="submit_btn"
             >提交评分</el-button
           >
         </el-form-item>
@@ -229,13 +230,14 @@ export default {
     };
   },
   async mounted() {
-    console.log(process.env.VUE_APP_FILEPATH);
+    // console.log(process.env.VUE_APP_FILEPATH);
+    // 文件下载的地址
     this.BASE_FILE_PATH = process.env.VUE_APP_FILEPATH;
     // this.updateReviewVideoProgress();
     let progressListRes = await getProgress();
     if (progressListRes.code === 1) {
       let { data: dataList } = progressListRes;
-      console.log(dataList);
+      console.log('dataList', dataList);
       dataList.map((item) => {
         item.isCompelete = false;
       });
@@ -282,13 +284,13 @@ export default {
         return null;
       }
     },
-    videoFileData() {
-      if (this.currentVideoInfos) {
-        return this.currentVideoInfos.fileData[0];
-      } else {
-        return null;
-      }
-    },
+    // videoFileData() {
+    //   if (this.currentVideoInfos) {
+    //     return this.currentVideoInfos.fileData[0];
+    //   } else {
+    //     return null;
+    //   }
+    // },
     percentage() {
       if (this.dataListLength) {
         return parseInt(((this.currentIndex + 1) * 100) / this.dataListLength);
@@ -503,11 +505,48 @@ export default {
   }
   .videro_player_wrap {
     margin: 20px 0;
+    .vedio_info_wrap {
+      display: flex;
+      justify-content: space-between;
+      .vedio_wrap {
+        width: 772px;
+        height: 595px;
+        margin-bottom: 20px;
+        .play_video {
+          width: 772px;
+          height: 595px;
+        }
+      }
+      .player_info {
+        width: 334px;
+        line-height: 1.7;
+        .video_info_container {
+          list-style: none;
+          .file_list {
+            li {
+              cursor: pointer;
+              &:hover {
+                color: #409eff;
+                span,
+                a {
+                  color: #409eff;
+                }
+              }
+
+              a {
+                text-decoration: none;
+                color: #303133;
+              }
+            }
+          }
+        }
+      }
+    }
     .video_control_wrap {
-      .progress_text{
+      .progress_text {
         color: #409eff;
         margin-bottom: 4px;
-        .progress_title{
+        .progress_title {
           font-size: 18px;
         }
       }
@@ -519,43 +558,6 @@ export default {
   .no_video_tip {
     color: #f56c6c;
     margin-bottom: 20px;
-  }
-  .vedio_info_wrap {
-    display: flex;
-    justify-content: space-between;
-    .vedio_wrap {
-      width: 772px;
-      height: 595px;
-      margin-bottom: 20px;
-      .play_video {
-        width: 772px;
-        height: 595px;
-      }
-    }
-    .player_info {
-      width: 334px;
-      line-height: 1.7;
-      .video_info_container {
-        list-style: none;
-        .file_list {
-          li {
-            cursor: pointer;
-            &:hover {
-              color: #409eff;
-              span,
-              a {
-                color: #409eff;
-              }
-            }
-
-            a {
-              text-decoration: none;
-              color: #303133;
-            }
-          }
-        }
-      }
-    }
   }
 
   .next {
@@ -569,19 +571,35 @@ export default {
     .rule_item {
       line-height: 1.4;
       display: flex;
-      margin-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+      &:nth-child(1){
+        background-color: #DDDDDD;
+        line-height: 40px;
+        text-align: center;
+        .rule_item_1{
+          padding-bottom: 0;
+        }
+      }
       .rule_inner_item {
-        margin-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+        &:nth-last-child(1){
+          border-bottom: 0;
+        }
       }
       .rule_item_0 {
         width: 220px;
+        border-right: 1px solid #ddd;
+        padding-top: 8px;
       }
       .rule_item_1 {
         width: 500px;
-        margin: 0 10px;
+        padding: 8px 10px 16px;
+        border-right: 1px solid #ddd;
       }
       .rule_item_2 {
+        padding-top: 8px;
         width: 220px;
+        padding-left: 10px;
       }
       ul {
         list-style: none;
@@ -591,7 +609,6 @@ export default {
           display: flex;
           .rule_item_1 {
             width: 500px;
-            margin-bottom: 10px;
           }
         }
       }
@@ -602,6 +619,9 @@ export default {
     font-size: 18px;
     color: #409eff;
     margin-bottom: 10px;
+  }
+  .submit_btn{
+    margin-top: 16px;
   }
 }
 </style>

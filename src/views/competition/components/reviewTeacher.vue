@@ -24,9 +24,7 @@
             ></video>
           </div>
           <div v-if="currentVideoInfos && !fileId" class="no_video_tip">
-            {{
-              `教师：${this.currentVideoInfos.name} 未上传视频,请为下一位教师评分（点按钮【下一个视频】）`
-            }}
+            {{ `提示：${this.currentVideoInfos.name} 未上传视频` }}
           </div>
         </div>
         <div class="player_info">
@@ -237,7 +235,7 @@ export default {
     let progressListRes = await getProgress();
     if (progressListRes.code === 1) {
       let { data: dataList } = progressListRes;
-      console.log('dataList', dataList);
+      console.log("dataList", dataList);
       dataList.map((item) => {
         item.isCompelete = false;
       });
@@ -482,7 +480,7 @@ export default {
     },
   },
   beforeRouteLeave(to, from, next) {
-    this.ocwPlayer.dispose();
+    this.ocwPlayer && this.ocwPlayer.dispose();
     next();
   },
 };
@@ -572,17 +570,17 @@ export default {
       line-height: 1.4;
       display: flex;
       border-bottom: 1px solid #ddd;
-      &:nth-child(1){
-        background-color: #DDDDDD;
+      &:nth-child(1) {
+        background-color: #dddddd;
         line-height: 40px;
         text-align: center;
-        .rule_item_1{
+        .rule_item_1 {
           padding-bottom: 0;
         }
       }
       .rule_inner_item {
         border-bottom: 1px solid #ddd;
-        &:nth-last-child(1){
+        &:nth-last-child(1) {
           border-bottom: 0;
         }
       }
@@ -620,7 +618,7 @@ export default {
     color: #409eff;
     margin-bottom: 10px;
   }
-  .submit_btn{
+  .submit_btn {
     margin-top: 16px;
   }
 }
